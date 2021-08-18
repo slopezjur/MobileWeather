@@ -40,12 +40,17 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':data')
-    //implementation project(path: ':testcore')
+    implementation project(path: ':testcore')
 
     def moshi_version = "1.12.0"
     def retrofit_version = "2.9.0"
