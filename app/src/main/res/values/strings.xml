@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MobileWeather</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="temperature_symbol">°C</string>
+
+    <string name="openweather_apikey">0bc9bc2a73fd9644f664cf5f5c5be8d7</string>
+    <string name="refreshOpenWeather">refreshOpenWeather</string>
+</resources>
