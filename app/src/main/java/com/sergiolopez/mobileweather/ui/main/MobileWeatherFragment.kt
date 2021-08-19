@@ -46,6 +46,7 @@ class MobileWeatherFragment : Fragment(R.layout.fragment_mobile_weather) {
                     CoordinatesGenerator().randomLongitude()
                 )
             )
+
             viewModel.openWeatherLiveData.observe(viewLifecycleOwner, { openWeather ->
                 setOpenWeatherInfo(openWeather)
             })

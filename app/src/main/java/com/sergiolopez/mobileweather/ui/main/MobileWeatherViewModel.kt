@@ -31,14 +31,17 @@ class MobileWeatherViewModel @Inject constructor(
                 when (it) {
                     is Resource.Loading -> {
                         _spinner.value = true
-                        // Simulate server delay
-                        delay(2000)
                     }
                     is Resource.Success -> {
+                        // Simulate server delay
+                        delay(2000)
                         it.data.let { openWeather -> openWeatherLiveData.postValue(openWeather) }
                         _spinner.value = false
                     }
-                    else -> _spinner.value = false
+                    is Resource.Failure -> {
+                        // TODO : Show error screen
+                        _spinner.value = false
+                    }
                 }
             }
         }
