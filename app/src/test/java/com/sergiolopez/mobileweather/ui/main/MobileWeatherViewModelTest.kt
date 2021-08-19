@@ -85,6 +85,32 @@ class MobileWeatherViewModelTest : BaseTest() {
         }
     }
 
+    @Test
+    fun refreshOpenWeather_whenRefreshOpenWeatherIsFailure_shouldShowNoData() {
+        runBlocking {
+            val openWeahter = buildOpenWeahter()
+
+            coEvery {
+                mobileWeatherRepository.getWeather(
+                    openWeahter.coordinates
+                )
+            } returns flowOf(
+                Resource.Failure(FailException.NoConnectionAvailable)
+            )
+
+            mobileWeatherViewModel.openWeatherLiveData.observeForever(openWeatherObserver)
+
+            mobileWeatherViewModel.refreshOpenWeather(openWeahter.coordinates)
+
+            // TODO : Verify screen error
+
+            assertEquals(mobileWeatherViewModel.spinner.value, false)
+            verify(exactly = 0) {
+                openWeatherObserver.onChanged(openWeahter)
+            }
+        }
+    }
+
     private fun buildOpenWeahter() =
         OpenWeather(
             Coordinates(0F, 0F),
