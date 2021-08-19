@@ -5,6 +5,7 @@ buildscript {
     ext.hilt_version = "2.37"
     ext.junit_version = "4.13.2"
     ext.navigation = "2.3.5"
+    ext.mockito = "3.11.2"
 
     repositories {
         google()
