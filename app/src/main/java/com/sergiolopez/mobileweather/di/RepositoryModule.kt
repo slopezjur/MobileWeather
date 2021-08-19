@@ -1,8 +1,7 @@
 package com.sergiolopez.mobileweather.di
 
 import com.sergiolopez.data.datasources.RemoteDataSource
-import com.sergiolopez.data.repository.OpenWeatherRepositoryImpl
-import com.sergiolopez.domain.repository.OpenWeatherRepository
+import com.sergiolopez.domain.repository.MobileWeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +17,8 @@ object RepositoryModule {
     @Provides
     fun provideRepository(
         remoteDataSource: RemoteDataSource
-    ): OpenWeatherRepository =
-        com.sergiolopez.data.repository.OpenWeatherRepositoryImpl(remoteDataSource)
+    ): MobileWeatherRepository =
+        com.sergiolopez.data.repository.MobileWeatherRepositoryImpl(remoteDataSource)
 
     @Singleton
     @Provides

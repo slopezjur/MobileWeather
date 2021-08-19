@@ -3,12 +3,12 @@ package com.sergiolopez.data.repository
 import com.sergiolopez.data.datasources.RemoteDataSource
 import com.sergiolopez.domain.model.Coordinates
 import com.sergiolopez.domain.model.Resource
-import com.sergiolopez.domain.repository.OpenWeatherRepository
+import com.sergiolopez.domain.repository.MobileWeatherRepository
 import kotlinx.coroutines.flow.flow
 
-class OpenWeatherRepositoryImpl constructor(
+class MobileWeatherRepositoryImpl constructor(
     private val remoteDataSource: RemoteDataSource,
-) : OpenWeatherRepository {
+) : MobileWeatherRepository {
 
     override fun getWeather(coordinates: Coordinates) = flow {
         emit(Resource.Loading)

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sergiolopez.domain.model.Coordinates
 import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.domain.model.Resource
-import com.sergiolopez.domain.repository.OpenWeatherRepository
+import com.sergiolopez.domain.repository.MobileWeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MobileWeatherViewModel @Inject constructor(
-    private val repository: OpenWeatherRepository
+    private val repository: MobileWeatherRepository
 ) : ViewModel() {
 
     private val _spinner = MutableStateFlow(false)

@@ -5,6 +5,6 @@ import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 
-interface OpenWeatherRepository {
+interface MobileWeatherRepository {
     fun getWeather(coordinates: Coordinates): Flow<Resource<OpenWeather>>
 }
