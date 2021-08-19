@@ -34,8 +34,8 @@ class MobileWeatherViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         // Simulate server delay
-                        delay(2000)
                         it.data.let { openWeather -> openWeatherLiveData.postValue(openWeather) }
+                        delay(2000)
                         _spinner.value = false
                     }
                     is Resource.Failure -> {
