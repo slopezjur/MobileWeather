@@ -1,7 +1,7 @@
 package com.sergiolopez.mobileweather.di
 
 import com.sergiolopez.domain.service.CoordinatesGeneratorService
-import com.sergiolopez.mobileweather.utils.service.CoordinatesGeneratorServiceImpl
+import com.sergiolopez.data.service.CoordinatesGeneratorServiceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

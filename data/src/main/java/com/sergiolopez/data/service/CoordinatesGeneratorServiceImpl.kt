@@ -1,4 +1,4 @@
-package com.sergiolopez.mobileweather.utils.service
+package com.sergiolopez.data.service
 
 import com.sergiolopez.domain.service.CoordinatesGeneratorService
 import kotlin.random.Random
