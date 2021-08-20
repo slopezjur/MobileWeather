@@ -6,4 +6,6 @@
 
     <string name="openweather_apikey">0bc9bc2a73fd9644f664cf5f5c5be8d7</string>
     <string name="refreshOpenWeather">refreshOpenWeather</string>
+
+    <string name="failure_no_connection">Error, no connection!</string>
 </resources>

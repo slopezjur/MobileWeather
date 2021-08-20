@@ -29,7 +29,7 @@
         app:srcCompat="@drawable/ic_refresh" />
 
     <include
-        android:id="@+id/layoutWeatherBasic"
+        android:id="@+id/layoutWeatherInfo"
         layout="@layout/layout_mobile_weather_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,12 +39,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/layoutFailureNoConnection"
+        layout="@layout/layout_mobile_weather_no_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/weather_group"
+        android:id="@+id/weatherGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="refreshWeather,layoutWeatherBasic"
+        app:constraint_referenced_ids="layoutWeatherInfo"
         tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/failureNoConnectionGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="layoutFailureNoConnection" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/failuresGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="layoutFailureNoConnection" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
