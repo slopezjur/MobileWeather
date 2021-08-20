@@ -3,6 +3,7 @@ package com.sergiolopez.data.repository
 import com.sergiolopez.data.datasources.RemoteDataSource
 import com.sergiolopez.domain.model.*
 import com.sergiolopez.testcore.BaseTest
+import com.sergiolopez.testcore.buildOpenWeahter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
@@ -123,14 +124,4 @@ class MobileWeatherRepositoryImplTest : BaseTest() {
             assertEquals(openWeatherFlowResult[1], openWeatherFlow[1])
         }
     }
-
-    fun buildOpenWeahter() =
-        OpenWeather(
-            Coordinates(0F, 0F),
-            Weather(0, "", "", ""),
-            Main(0, 0, 0, 0, 0, 0),
-            Wind(0.0),
-            "",
-            ""
-        )
 }

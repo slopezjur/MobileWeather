@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.sergiolopez.domain.model.*
 import com.sergiolopez.domain.repository.MobileWeatherRepository
 import com.sergiolopez.testcore.BaseTest
+import com.sergiolopez.testcore.buildOpenWeahter
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -110,14 +111,4 @@ class MobileWeatherViewModelTest : BaseTest() {
             }
         }
     }
-
-    private fun buildOpenWeahter() =
-        OpenWeather(
-            Coordinates(0F, 0F),
-            Weather(0, "", "", ""),
-            Main(0, 0, 0, 0, 0, 0),
-            Wind(0.0),
-            "",
-            ""
-        )
 }
