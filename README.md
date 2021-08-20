@@ -32,8 +32,10 @@ Do you like Modern Android Development scores? Welcome, here it is mine:
 - Data:
     - DataSources: Interfaces to define the behavior of our services.
     - Repository: Used to maintain the DataSource logic. We could have a repository that handle data from the current OpenWeather service or from local by using Room.
+    - Service: Used to store the implementation of the services
 - Domain:
     - Model: Our business logic related to the domain.
     - Repository: Interfaces to define the high level behavior of our repositories.
+    - Service: Interfaces to define the logic of some part of our domain
 - Testcore:
     Some shared classes to unify repetitive code to test Coroutines or build test objects.
