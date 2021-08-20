@@ -23,6 +23,9 @@ class MobileWeatherViewModel @Inject constructor(
     private val _spinner = MutableStateFlow(false)
     val spinner: StateFlow<Boolean> get() = _spinner
 
+    private val _failureState = MutableStateFlow(FailureState.NONE)
+    val failureState: StateFlow<FailureState> get() = _failureState
+
     val openWeatherLiveData = MutableLiveData<OpenWeather>()
 
     fun refreshOpenWeather(coordinates: Coordinates) {
@@ -31,18 +34,33 @@ class MobileWeatherViewModel @Inject constructor(
                 when (it) {
                     is Resource.Loading -> {
                         _spinner.value = true
+                        _failureState.value = FailureState.NONE
                     }
                     is Resource.Success -> {
-                        // Simulate server delay
                         it.data.let { openWeather -> openWeatherLiveData.postValue(openWeather) }
+                        // Simulate server delay
                         delay(2000)
                         _spinner.value = false
                     }
                     is Resource.Failure -> {
-                        // TODO : Show error screen
+                        manageFailureState(it)
                         _spinner.value = false
                     }
                 }
+            }
+        }
+    }
+
+    private fun manageFailureState(it: Resource.Failure) {
+        when (it.exception) {
+            is FailException.NoConnectionAvailable -> {
+                _failureState.value = FailureState.NO_CONNECTION
+            }
+            is FailException.BadRequest -> {
+                _failureState.value = FailureState.BAD_REQUEST
+            }
+            is FailException.EmptyBody -> {
+                _failureState.value = FailureState.EMPTY_BODY
             }
         }
     }

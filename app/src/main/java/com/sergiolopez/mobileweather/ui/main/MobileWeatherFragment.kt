@@ -9,7 +9,6 @@ import com.sergiolopez.domain.model.Coordinates
 import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.mobileweather.R
 import com.sergiolopez.mobileweather.databinding.FragmentMobileWeatherBinding
-import com.sergiolopez.mobileweather.utils.CoordinatesGenerator
 import com.sergiolopez.mobileweather.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -34,11 +33,9 @@ class MobileWeatherFragment : Fragment(R.layout.fragment_mobile_weather) {
     }
 
     private fun loadOpenWeather() {
-        fragmentBinding.run {
-            viewModel.spinner.onEach {
-                progressIndicator.visible = it
-                weatherGroup.visible = !it
-            }.launchIn(lifecycleScope)
+        managerLoadingState()
+        manageDataState()
+        manageFailureState()
 
             viewModel.refreshOpenWeather(
                 Coordinates(
@@ -53,10 +50,50 @@ class MobileWeatherFragment : Fragment(R.layout.fragment_mobile_weather) {
         }
     }
 
+    private fun managerLoadingState() {
+        fragmentBinding.run {
+            viewModel.spinner.onEach {
+                progressIndicator.visible = it
+                weatherGroup.visible = !it
+                refreshWeather.visible = !it
+            }.launchIn(lifecycleScope)
+        }
+    }
+
+    private fun manageFailureState() {
+        fragmentBinding.run {
+            viewModel.failureState.onEach {
+                weatherGroup.visible = false
+                refreshWeather.visible = true
+
+                when (it) {
+                    FailureState.NO_CONNECTION -> {
+                        failureNoConnectionGroup.visible = true
+                    }
+                    FailureState.BAD_REQUEST -> {
+                        failureNoConnectionGroup.visible = true
+                    }
+                    FailureState.EMPTY_BODY -> {
+                        failureNoConnectionGroup.visible = true
+                    }
+                    FailureState.NONE -> {
+                        failuresGroup.visible = false
+                    }
+                }
+            }.launchIn(lifecycleScope)
+        }
+    }
+
+    private fun manageDataState() {
+        viewModel.openWeatherLiveData.observe(viewLifecycleOwner, { openWeather ->
+            setOpenWeatherInfo(openWeather)
+        })
+    }
+
     private fun setOpenWeatherInfo(openWeather: OpenWeather) {
-        fragmentBinding.layoutWeatherBasic.weatherTime.text = openWeather.datetime
-        fragmentBinding.layoutWeatherBasic.weatherTemperature.text =
+        fragmentBinding.layoutWeatherInfo.weatherTime.text = openWeather.datetime
+        fragmentBinding.layoutWeatherInfo.weatherTemperature.text =
             openWeather.main.temp.toString()
-        fragmentBinding.layoutWeatherBasic.weatherCityName.text = openWeather.name
+        fragmentBinding.layoutWeatherInfo.weatherCityName.text = openWeather.name
     }
 }
