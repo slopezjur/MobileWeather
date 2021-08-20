@@ -2,12 +2,16 @@ package com.sergiolopez.mobileweather.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.sergiolopez.domain.model.*
+import com.sergiolopez.domain.model.FailException
+import com.sergiolopez.domain.model.OpenWeather
+import com.sergiolopez.domain.model.Resource
 import com.sergiolopez.domain.repository.MobileWeatherRepository
+import com.sergiolopez.domain.service.CoordinatesGeneratorService
 import com.sergiolopez.testcore.BaseTest
 import com.sergiolopez.testcore.buildOpenWeahter
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,6 +30,9 @@ class MobileWeatherViewModelTest : BaseTest() {
     lateinit var mobileWeatherRepository: MobileWeatherRepository
 
     @MockK
+    lateinit var coordinatesGeneratorService: CoordinatesGeneratorService
+
+    @MockK
     lateinit var openWeatherObserver: Observer<OpenWeather>
 
     // Test MutableLiveData
@@ -35,7 +42,8 @@ class MobileWeatherViewModelTest : BaseTest() {
     @Before
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        mobileWeatherViewModel = MobileWeatherViewModel(mobileWeatherRepository)
+        mobileWeatherViewModel =
+            MobileWeatherViewModel(mobileWeatherRepository, coordinatesGeneratorService)
     }
 
     @Test
@@ -51,9 +59,17 @@ class MobileWeatherViewModelTest : BaseTest() {
                 Resource.Loading
             )
 
+            every {
+                coordinatesGeneratorService.randomLatitude()
+            } returns openWeahter.coordinates.latitude
+
+            every {
+                coordinatesGeneratorService.randomLongitude()
+            } returns openWeahter.coordinates.longitude
+
             mobileWeatherViewModel.openWeatherLiveData.observeForever(openWeatherObserver)
 
-            mobileWeatherViewModel.refreshOpenWeather(openWeahter.coordinates)
+            mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, true)
             verify(exactly = 0) {
@@ -75,9 +91,17 @@ class MobileWeatherViewModelTest : BaseTest() {
                 Resource.Success(openWeahter)
             )
 
+            every {
+                coordinatesGeneratorService.randomLatitude()
+            } returns openWeahter.coordinates.latitude
+
+            every {
+                coordinatesGeneratorService.randomLongitude()
+            } returns openWeahter.coordinates.longitude
+
             mobileWeatherViewModel.openWeatherLiveData.observeForever(openWeatherObserver)
 
-            mobileWeatherViewModel.refreshOpenWeather(openWeahter.coordinates)
+            mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
             verify(exactly = 1) {
@@ -99,9 +123,17 @@ class MobileWeatherViewModelTest : BaseTest() {
                 Resource.Failure(FailException.NoConnectionAvailable)
             )
 
+            every {
+                coordinatesGeneratorService.randomLatitude()
+            } returns openWeahter.coordinates.latitude
+
+            every {
+                coordinatesGeneratorService.randomLongitude()
+            } returns openWeahter.coordinates.longitude
+
             mobileWeatherViewModel.openWeatherLiveData.observeForever(openWeatherObserver)
 
-            mobileWeatherViewModel.refreshOpenWeather(openWeahter.coordinates)
+            mobileWeatherViewModel.refreshOpenWeather()
 
             // TODO : Verify screen error
 
