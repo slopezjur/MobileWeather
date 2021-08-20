@@ -3,6 +3,7 @@ package com.sergiolopez.mobileweather.ui.main
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.sergiolopez.domain.model.FailException
+import com.sergiolopez.domain.model.FailureState
 import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.domain.model.Resource
 import com.sergiolopez.domain.repository.MobileWeatherRepository
@@ -72,6 +73,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, true)
+            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.NONE)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -104,6 +106,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
+            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.NONE)
             verify(exactly = 1) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -111,7 +114,7 @@ class MobileWeatherViewModelTest : BaseTest() {
     }
 
     @Test
-    fun refreshOpenWeather_whenRefreshOpenWeatherIsFailure_shouldShowNoData() {
+    fun refreshOpenWeather_whenRefreshOpenWeatherIsNoConnection_shouldShowNoData() {
         runBlocking {
             val openWeahter = buildOpenWeahter()
 
@@ -135,9 +138,74 @@ class MobileWeatherViewModelTest : BaseTest() {
 
             mobileWeatherViewModel.refreshOpenWeather()
 
-            // TODO : Verify screen error
+            assertEquals(mobileWeatherViewModel.spinner.value, false)
+            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.NO_CONNECTION)
+            verify(exactly = 0) {
+                openWeatherObserver.onChanged(openWeahter)
+            }
+        }
+    }
+
+    @Test
+    fun refreshOpenWeather_whenRefreshOpenWeatherIsBadRequest_shouldShowNoData() {
+        runBlocking {
+            val openWeahter = buildOpenWeahter()
+
+            coEvery {
+                mobileWeatherRepository.getWeather(
+                    openWeahter.coordinates
+                )
+            } returns flowOf(
+                Resource.Failure(FailException.BadRequest)
+            )
+
+            every {
+                coordinatesGeneratorService.randomLatitude()
+            } returns openWeahter.coordinates.latitude
+
+            every {
+                coordinatesGeneratorService.randomLongitude()
+            } returns openWeahter.coordinates.longitude
+
+            mobileWeatherViewModel.openWeatherLiveData.observeForever(openWeatherObserver)
+
+            mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
+            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.BAD_REQUEST)
+            verify(exactly = 0) {
+                openWeatherObserver.onChanged(openWeahter)
+            }
+        }
+    }
+
+    @Test
+    fun refreshOpenWeather_whenRefreshOpenWeatherIsEmptyBody_shouldShowNoData() {
+        runBlocking {
+            val openWeahter = buildOpenWeahter()
+
+            coEvery {
+                mobileWeatherRepository.getWeather(
+                    openWeahter.coordinates
+                )
+            } returns flowOf(
+                Resource.Failure(FailException.EmptyBody)
+            )
+
+            every {
+                coordinatesGeneratorService.randomLatitude()
+            } returns openWeahter.coordinates.latitude
+
+            every {
+                coordinatesGeneratorService.randomLongitude()
+            } returns openWeahter.coordinates.longitude
+
+            mobileWeatherViewModel.openWeatherLiveData.observeForever(openWeatherObserver)
+
+            mobileWeatherViewModel.refreshOpenWeather()
+
+            assertEquals(mobileWeatherViewModel.spinner.value, false)
+            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.EMPTY_BODY)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
