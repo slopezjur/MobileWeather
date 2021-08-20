@@ -7,13 +7,12 @@ private val locale = Locale("es", "ES")
 
 fun Long.timestampToDateTime(): String {
 
-    val calendar = Calendar.getInstance()
-    calendar.timeInMillis = this
-
     val formatter = SimpleDateFormat(
-        "yyyy-MM-dd HH:mm:ss",
+        "yyyy-MM-dd HH:mm:ss z",
         locale
     )
 
-    return formatter.format(calendar.time)
+    val date = Date(this * 1000)
+
+    return formatter.format(date.time)
 }
