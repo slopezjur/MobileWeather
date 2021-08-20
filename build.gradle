@@ -4,9 +4,10 @@ buildscript {
     ext.kotlin_coroutine_version = "1.4.3"
     ext.hilt_version = "2.37"
     ext.junit_version = "4.13.2"
-    ext.navigation = "2.3.5"
-    ext.mockito = "3.11.2"
+    ext.navigation_version = "2.3.5"
+    ext.mockito_version = "3.11.2"
     ext.mockk_version = "1.12.0"
+    ext.arch_version = "2.1.0"
 
     repositories {
         google()
