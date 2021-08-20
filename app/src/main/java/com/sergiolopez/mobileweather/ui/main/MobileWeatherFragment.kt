@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.sergiolopez.domain.model.Coordinates
+import com.sergiolopez.domain.model.FailureState
 import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.mobileweather.R
 import com.sergiolopez.mobileweather.databinding.FragmentMobileWeatherBinding
@@ -37,17 +37,7 @@ class MobileWeatherFragment : Fragment(R.layout.fragment_mobile_weather) {
         manageDataState()
         manageFailureState()
 
-            viewModel.refreshOpenWeather(
-                Coordinates(
-                    CoordinatesGenerator().randomLatitude(),
-                    CoordinatesGenerator().randomLongitude()
-                )
-            )
-
-            viewModel.openWeatherLiveData.observe(viewLifecycleOwner, { openWeather ->
-                setOpenWeatherInfo(openWeather)
-            })
-        }
+        viewModel.refreshOpenWeather()
     }
 
     private fun managerLoadingState() {

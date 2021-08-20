@@ -3,9 +3,8 @@ package com.sergiolopez.mobileweather.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sergiolopez.domain.model.Coordinates
-import com.sergiolopez.domain.model.OpenWeather
-import com.sergiolopez.domain.model.Resource
+import com.sergiolopez.domain.service.CoordinatesGeneratorService
+import com.sergiolopez.domain.model.*
 import com.sergiolopez.domain.repository.MobileWeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MobileWeatherViewModel @Inject constructor(
-    private val repository: MobileWeatherRepository
+    private val repository: MobileWeatherRepository,
+    private val coordinatesGeneratorService: CoordinatesGeneratorService
 ) : ViewModel() {
 
     private val _spinner = MutableStateFlow(false)
@@ -28,9 +28,14 @@ class MobileWeatherViewModel @Inject constructor(
 
     val openWeatherLiveData = MutableLiveData<OpenWeather>()
 
-    fun refreshOpenWeather(coordinates: Coordinates) {
+    fun refreshOpenWeather() {
         viewModelScope.launch {
-            repository.getWeather(coordinates).collect {
+            repository.getWeather(
+                Coordinates(
+                    coordinatesGeneratorService.randomLatitude(),
+                    coordinatesGeneratorService.randomLongitude()
+                )
+            ).collect {
                 when (it) {
                     is Resource.Loading -> {
                         _spinner.value = true
