@@ -81,9 +81,11 @@ class MobileWeatherFragment : Fragment(R.layout.fragment_mobile_weather) {
     }
 
     private fun setOpenWeatherInfo(openWeather: OpenWeather) {
-        fragmentBinding.layoutWeatherInfo.weatherTime.text = openWeather.datetime
-        fragmentBinding.layoutWeatherInfo.weatherTemperature.text =
-            openWeather.main.temp.toString()
-        fragmentBinding.layoutWeatherInfo.weatherCityName.text = openWeather.name
+        fragmentBinding.apply {
+            layoutWeatherInfo.weatherTime.text = openWeather.datetime
+            layoutWeatherInfo.weatherTemperature.text = openWeather.main.temp.toString()
+            layoutWeatherInfo.weatherTemperatureSymbol.text = getString(R.string.temperature_symbol)
+            layoutWeatherInfo.weatherCityName.text = openWeather.name
+        }
     }
 }
