@@ -3,9 +3,9 @@ package com.sergiolopez.mobileweather.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sergiolopez.domain.service.CoordinatesGeneratorService
 import com.sergiolopez.domain.model.*
 import com.sergiolopez.domain.repository.MobileWeatherRepository
+import com.sergiolopez.domain.service.CoordinatesGeneratorService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +20,13 @@ class MobileWeatherViewModel @Inject constructor(
     private val coordinatesGeneratorService: CoordinatesGeneratorService
 ) : ViewModel() {
 
+    private val initialFailureState = FailureState(FailureStateType.NONE)
+
     private val _spinner = MutableStateFlow(false)
     val spinner: StateFlow<Boolean> get() = _spinner
 
-    private val _failureState = MutableStateFlow(FailureState.NONE)
-    val failureState: StateFlow<FailureState> get() = _failureState
+    private val _failureState = MutableStateFlow(initialFailureState)
+    val failureStateType: StateFlow<FailureState> get() = _failureState
 
     val openWeatherLiveData = MutableLiveData<OpenWeather>()
 
@@ -39,7 +41,7 @@ class MobileWeatherViewModel @Inject constructor(
                 when (it) {
                     is Resource.Loading -> {
                         _spinner.value = true
-                        _failureState.value = FailureState.NONE
+                        _failureState.value = initialFailureState
                     }
                     is Resource.Success -> {
                         it.data.let { openWeather -> openWeatherLiveData.postValue(openWeather) }
@@ -59,13 +61,16 @@ class MobileWeatherViewModel @Inject constructor(
     private fun manageFailureState(it: Resource.Failure) {
         when (it.exception) {
             is FailException.NoConnectionAvailable -> {
-                _failureState.value = FailureState.NO_CONNECTION
+                _failureState.value =
+                    FailureState(FailureStateType.NO_CONNECTION, it.exception.exceptionMessage)
             }
             is FailException.BadRequest -> {
-                _failureState.value = FailureState.BAD_REQUEST
+                _failureState.value =
+                    FailureState(FailureStateType.BAD_REQUEST, it.exception.exceptionMessage)
             }
             is FailException.EmptyBody -> {
-                _failureState.value = FailureState.EMPTY_BODY
+                _failureState.value =
+                    FailureState(FailureStateType.EMPTY_BODY, it.exception.exceptionMessage)
             }
         }
     }

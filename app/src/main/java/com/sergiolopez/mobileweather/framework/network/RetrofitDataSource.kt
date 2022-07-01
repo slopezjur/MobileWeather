@@ -21,10 +21,15 @@ class RetrofitDataSource(
             ).run {
                 if (isSuccessful) {
                     body()?.let { body -> Resource.Success(body.toDomain()) } ?: Resource.Failure(
-                        FailException.EmptyBody
+                        FailException.EmptyBody(message())
                     )
                 } else {
-                    Resource.Failure(FailException.BadRequest)
+                    Resource.Failure(
+                        FailException.BadRequest(
+                            // TODO : FIX PLEASE
+                            errorBody()?.byteString()?.utf8() ?: message()
+                        )
+                    )
                 }
             }
         } else {

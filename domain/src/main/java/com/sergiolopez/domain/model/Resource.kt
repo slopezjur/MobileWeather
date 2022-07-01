@@ -6,8 +6,8 @@ sealed class Resource<out T> {
     data class Failure(val exception: FailException) : Resource<Nothing>()
 }
 
-sealed class FailException {
+sealed class FailException(val exceptionMessage: String? = null) {
     object NoConnectionAvailable : FailException()
-    object BadRequest : FailException()
-    object EmptyBody : FailException()
+    class BadRequest(message: String) : FailException(message)
+    class EmptyBody(message: String) : FailException(message)
 }

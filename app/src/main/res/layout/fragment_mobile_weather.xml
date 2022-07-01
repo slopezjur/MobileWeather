@@ -52,6 +52,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/layoutFailureBadRequest"
+        layout="@layout/layout_mobile_weather_bad_request"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/weatherGroup"
         android:layout_width="wrap_content"
@@ -68,11 +79,17 @@
         app:constraint_referenced_ids="layoutFailureNoConnection" />
 
     <androidx.constraintlayout.widget.Group
+        android:id="@+id/failureBadRequestGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="layoutFailureBadRequest" />
+
+    <androidx.constraintlayout.widget.Group
         android:id="@+id/failuresGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="layoutFailureNoConnection" />
-
-
+        app:constraint_referenced_ids="layoutFailureNoConnection,failureBadRequestGroup" />
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,8 @@ android {
         testInstrumentationRunner "com.sergiolopez.mobileweather.utils.CustomTestRunner"
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.openweathermap.org/data/2.5/\"")
+
+        // https://home.openweathermap.org/api_keys
         buildConfigField("String", "API_KEY", "\"0bc9bc2a73fd9644f664cf5f5c5be8d7\"")
     }
 

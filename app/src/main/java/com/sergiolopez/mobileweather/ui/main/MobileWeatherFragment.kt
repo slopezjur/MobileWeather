@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.sergiolopez.domain.model.FailureState
+import com.sergiolopez.domain.model.FailureStateType
 import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.mobileweather.R
 import com.sergiolopez.mobileweather.databinding.FragmentMobileWeatherBinding
@@ -52,21 +52,22 @@ class MobileWeatherFragment : Fragment(R.layout.fragment_mobile_weather) {
 
     private fun manageFailureState() {
         fragmentBinding.run {
-            viewModel.failureState.onEach {
+            viewModel.failureStateType.onEach {
                 weatherGroup.visible = false
                 refreshWeather.visible = true
 
-                when (it) {
-                    FailureState.NO_CONNECTION -> {
+                when (it.failureStateType) {
+                    FailureStateType.NO_CONNECTION -> {
                         failureNoConnectionGroup.visible = true
                     }
-                    FailureState.BAD_REQUEST -> {
+                    FailureStateType.BAD_REQUEST -> {
+                        failureBadRequestGroup.visible = true
+                        layoutFailureBadRequest.failureBadRequestText.text = it.failureMessage
+                    }
+                    FailureStateType.EMPTY_BODY -> {
                         failureNoConnectionGroup.visible = true
                     }
-                    FailureState.EMPTY_BODY -> {
-                        failureNoConnectionGroup.visible = true
-                    }
-                    FailureState.NONE -> {
+                    FailureStateType.NONE -> {
                         failuresGroup.visible = false
                     }
                 }

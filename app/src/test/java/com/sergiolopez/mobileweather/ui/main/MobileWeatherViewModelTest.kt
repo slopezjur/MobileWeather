@@ -3,7 +3,7 @@ package com.sergiolopez.mobileweather.ui.main
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.sergiolopez.domain.model.FailException
-import com.sergiolopez.domain.model.FailureState
+import com.sergiolopez.domain.model.FailureStateType
 import com.sergiolopez.domain.model.OpenWeather
 import com.sergiolopez.domain.model.Resource
 import com.sergiolopez.domain.repository.MobileWeatherRepository
@@ -73,7 +73,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, true)
-            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.NONE)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.NONE)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -106,7 +106,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.NONE)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.NONE)
             verify(exactly = 1) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -139,7 +139,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.NO_CONNECTION)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.NO_CONNECTION)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -172,7 +172,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.BAD_REQUEST)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.BAD_REQUEST)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -205,7 +205,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureState.value, FailureState.EMPTY_BODY)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.EMPTY_BODY)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
