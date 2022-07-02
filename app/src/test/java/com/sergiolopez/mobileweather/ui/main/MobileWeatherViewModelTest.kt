@@ -2,10 +2,7 @@ package com.sergiolopez.mobileweather.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.sergiolopez.domain.model.FailException
-import com.sergiolopez.domain.model.FailureStateType
-import com.sergiolopez.domain.model.OpenWeather
-import com.sergiolopez.domain.model.Resource
+import com.sergiolopez.domain.model.*
 import com.sergiolopez.domain.repository.MobileWeatherRepository
 import com.sergiolopez.domain.service.CoordinatesGeneratorService
 import com.sergiolopez.testcore.BaseTest
@@ -51,6 +48,7 @@ class MobileWeatherViewModelTest : BaseTest() {
     fun refreshOpenWeather_whenRefreshOpenWeatherIsLoading_shouldShowSpinner() {
         runBlocking {
             val openWeahter = buildOpenWeahter()
+            val failureState = FailureState(FailureStateType.NONE)
 
             coEvery {
                 mobileWeatherRepository.getWeather(
@@ -73,7 +71,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, true)
-            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.NONE)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, failureState)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -84,6 +82,7 @@ class MobileWeatherViewModelTest : BaseTest() {
     fun refreshOpenWeather_whenRefreshOpenWeatherIsSuccess_shouldShowData() {
         runBlocking {
             val openWeahter = buildOpenWeahter()
+            val failureState = FailureState(FailureStateType.NONE)
 
             coEvery {
                 mobileWeatherRepository.getWeather(
@@ -106,7 +105,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.NONE)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, failureState)
             verify(exactly = 1) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -117,13 +116,15 @@ class MobileWeatherViewModelTest : BaseTest() {
     fun refreshOpenWeather_whenRefreshOpenWeatherIsNoConnection_shouldShowNoData() {
         runBlocking {
             val openWeahter = buildOpenWeahter()
+            val failException = FailException.NoConnectionAvailable
+            val failureState = FailureState(FailureStateType.NO_CONNECTION)
 
             coEvery {
                 mobileWeatherRepository.getWeather(
                     openWeahter.coordinates
                 )
             } returns flowOf(
-                Resource.Failure(FailException.NoConnectionAvailable)
+                Resource.Failure(failException)
             )
 
             every {
@@ -139,7 +140,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.NO_CONNECTION)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, failureState)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -150,13 +151,16 @@ class MobileWeatherViewModelTest : BaseTest() {
     fun refreshOpenWeather_whenRefreshOpenWeatherIsBadRequest_shouldShowNoData() {
         runBlocking {
             val openWeahter = buildOpenWeahter()
+            val failureMessage = "Bad request"
+            val failException = FailException.BadRequest(failureMessage)
+            val failureState = FailureState(FailureStateType.BAD_REQUEST, failureMessage)
 
             coEvery {
                 mobileWeatherRepository.getWeather(
                     openWeahter.coordinates
                 )
             } returns flowOf(
-                Resource.Failure(FailException.BadRequest)
+                Resource.Failure(failException)
             )
 
             every {
@@ -172,7 +176,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.BAD_REQUEST)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, failureState)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
@@ -183,13 +187,16 @@ class MobileWeatherViewModelTest : BaseTest() {
     fun refreshOpenWeather_whenRefreshOpenWeatherIsEmptyBody_shouldShowNoData() {
         runBlocking {
             val openWeahter = buildOpenWeahter()
+            val failureMessage = "Empty body"
+            val failException = FailException.EmptyBody(failureMessage)
+            val failureState = FailureState(FailureStateType.EMPTY_BODY, failureMessage)
 
             coEvery {
                 mobileWeatherRepository.getWeather(
                     openWeahter.coordinates
                 )
             } returns flowOf(
-                Resource.Failure(FailException.EmptyBody)
+                Resource.Failure(failException)
             )
 
             every {
@@ -205,7 +212,7 @@ class MobileWeatherViewModelTest : BaseTest() {
             mobileWeatherViewModel.refreshOpenWeather()
 
             assertEquals(mobileWeatherViewModel.spinner.value, false)
-            assertEquals(mobileWeatherViewModel.failureStateType.value, FailureStateType.EMPTY_BODY)
+            assertEquals(mobileWeatherViewModel.failureStateType.value, failureState)
             verify(exactly = 0) {
                 openWeatherObserver.onChanged(openWeahter)
             }
